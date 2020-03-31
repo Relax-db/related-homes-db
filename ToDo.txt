@@ -1,0 +1,14 @@
+Overall App Workflow:
+
+* index.jsx loads App.jsx
+* App sends GET request to DB to get object w/ relatedHouses Property
+* GET request is for specific house based on houseItem #
+* App passes relatedHousesArray to HomesList as a prop
+* HomesList has state called displayedHouses (originally set to an empty array, should be an array with 3 objects after componentDidMount calls setCurrentDisplay fn)
+* HomesList has setCurrentDisplay function that sets this.state.displayedHouses using props passed from App
+* HomesList renders CurrentDisplay component
+* HomesList passes CurrentDisplay this.state.displayedHouses
+* CurrentDisplay displays 3 houseObjects recieved as prop
+* HomesList renders two buttons to move carousel forward or back
+* HomesListButtons have onClick event which invokes function
+* HomesList has handleClick fn that uses setCurrentDisplay fn to update this.state.displayedHouses
