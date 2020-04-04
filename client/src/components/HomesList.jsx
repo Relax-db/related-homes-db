@@ -27,6 +27,7 @@ class HomesList extends React.Component {
       }
     })
     .then((response) => {
+      console.log(response.data)
       this.setState({relatedHouses: response.data})
     })
     .catch((error) => {

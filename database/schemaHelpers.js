@@ -43,7 +43,7 @@ const makeDescription = () => {
 
 const imageLoader = () => {
   let path = `https://relaxly-photos.s3-us-west-1.amazonaws.com/`;
-  let imageBucket = ['botique_villa', 'cabane_lalegende', 'charming_family_home', 'cosmos_room', 'double_with_kitchenette', 'extremely_central_flat', 'hector_cave_house', 'j_tree', 'luxury_suite_quito', 'modern_houseboat', 'modern_tree_dwelling', 'moderne_apartment', 'monte_verde', 'na_barra', 'north_iceland', 'off_grid_cottage', 'pisgah_highlands', 'pops_dream', 'private_pool', 'private_seaside_retreat', 'pyramids_view', 'raglan_treehouse', 'ritz', 'romantic_apt', 'romantic_cabana', 'rustic_a_frame', 'sea_shell_cottage', 'stone_villa', 'super_cute_retro_airstream', 'tantilize', 'underground_hygge', 'unique_ship', 'vermont_tree_cabin', 'villa_5', 'warm_cosy_yurt', 'whitehouse', 'world_famouse_seashell_house', 'zweiufer', ];
+  let imageBucket = ['botique_villa', 'cabane_lalegende', 'charming_family_home', 'cosmos_room', 'double_with_kitchenette', 'extremely_central_flat', 'hector_cave_house', 'j_tree', 'luxury_suite_quito', 'modern_houseboat', 'modern_tree_dwelling', 'moderne_apartment', 'monte_verde', 'na_barra', 'north_iceland', 'off_grid_cottage', 'pisgah_highlands', 'pops_dream', 'private_pool', 'private_seaside_retreat', 'pyramids_view', 'raglan_treehouse', 'ritz', 'romantic_apt', 'romantic_cabana', 'rustic_a_frame', 'sea_shell_cottage', 'stone_villa', 'super_cute_retro_airstream', 'tantilize', 'underground_hygge', 'unique_ship', 'vermont_tree_cabin', 'villa_5', 'warm_cosy_yurt', 'whitehouse', 'world_famouse_seashell_house', 'zweiufer'];
   let end = '.jpg';
   let string = `${path}${imageBucket[getRandomInt(0,(imageBucket.length-1))]}${end}`;
   return string
