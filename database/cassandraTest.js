@@ -7,6 +7,10 @@ const helper = require('./schemaHelpers.js');
 
 const distance = cassandra.types.distance;
 
+const maxHomes = 2000000;
+
+let count = 0;
+
 const client = new cassandra.Client({
   contactPoints: ['localhost'],
   localDataCenter: 'datacenter1',
@@ -19,16 +23,18 @@ const client = new cassandra.Client({
   },
 });
 
-const createKeySpace = "CREATE KEYSPACE if not exists houseKeySpace WITH replication = { 'class': 'SimpleStrategy', 'replication_factor': 1 }";
+const createKeySpace = "CREATE KEYSPACE if not exists houseKeySpace2 WITH replication = { 'class': 'SimpleStrategy', 'replication_factor': 1 }";
 
-const houses = "CREATE TABLE if not exists houseKeySpace.houses"
+const houses = "CREATE TABLE if not exists houseKeySpace2.houses"
 + "(id uuid, photo text, location text, beds text, rating text, description text, price text, PRIMARY KEY(id))";
 
-const newHouse = "INSERT INTO houseKeySpace.houses"
+const newHouse = "INSERT INTO houseKeySpace2.houses"
 + "(id, photo, location, beds, rating, description, price)"
 + "values (?, ?, ?, ?, ?, ?, ?)";
 
-const houseMaker = () => {
+// const numberOfHouses = "SELECT COUNT(*) FROM housekeyspace.houses";
+
+const houseMaker = (callback) => {
   const params = [
     cassandra.types.Uuid.random(),
     helper.imageLoader(),
@@ -38,7 +44,23 @@ const houseMaker = () => {
     `${helper.makeDescription()}`,
     `$${faker.commerce.price()}`,
   ];
-  return client.execute(newHouse, params);
+  return client.execute(newHouse, params, callback);
+};
+
+// < ----------- Do not change this part ------------>
+const makeMoreHomes = () => {
+  for (let i = 0; i < 100000; i += 1) {
+    count += 1;
+    if (i + 1 === 100000 && count < maxHomes) {
+      console.log('Made ', count, ' homes');
+      houseMaker(makeMoreHomes);
+    } else {
+      houseMaker();
+      if (count === maxHomes) {
+        console.log('Finished Making', count, 'homes');
+      }
+    }
+  }
 };
 
 client.connect()
@@ -48,12 +70,6 @@ client.connect()
   .then(() => client.execute(houses))
   .then(console.log('Table for houses has been made'))
   .then(() => {
-    for (let i = 0; i < 100000; i += 1) {
-      if ((i + 1) % 10000 === 0) {
-        console.log('generating house', i + 1);
-      }
-      houseMaker();
-    }
-  })
-  .then(console.log('houses have been made'))
-  .catch((err) => console.log(err));
+    makeMoreHomes();
+  });
+// < ----------- Do not change this part ------------>
