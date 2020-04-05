@@ -3,25 +3,14 @@
 /* eslint-disable no-console */
 const cassandra = require('cassandra-driver');
 const faker = require('faker');
+const client = require('./cassandraClient.js');
 const helper = require('./schemaHelpers.js');
 
-const distance = cassandra.types.distance;
+const maxHomes = 100000;
 
-const maxHomes = 2000000;
+let start;
 
 let count = 0;
-
-const client = new cassandra.Client({
-  contactPoints: ['localhost'],
-  localDataCenter: 'datacenter1',
-  pooling: {
-    coreConnectionsPerHost: {
-      [distance.local]: 10,
-      [distance.remote]: 1,
-    },
-    maxRequestsPerConnection: 32768,
-  },
-});
 
 const createKeySpace = "CREATE KEYSPACE if not exists houseKeySpace2 WITH replication = { 'class': 'SimpleStrategy', 'replication_factor': 1 }";
 
@@ -31,6 +20,8 @@ const houses = "CREATE TABLE if not exists houseKeySpace2.houses"
 const newHouse = "INSERT INTO houseKeySpace2.houses"
 + "(id, photo, location, beds, rating, description, price)"
 + "values (?, ?, ?, ?, ?, ?, ?)";
+
+const customIndex = "CREATE CUSTOM INDEX if not exists house_location ON houseKeySpace2.houses (location) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'false'}";
 
 // const numberOfHouses = "SELECT COUNT(*) FROM housekeyspace.houses";
 
@@ -48,16 +39,17 @@ const houseMaker = (callback) => {
 };
 
 // < ----------- Do not change this part ------------>
-const makeMoreHomes = () => {
-  for (let i = 0; i < 100000; i += 1) {
+const makeMoreHomes = (callback) => {
+  for (let i = 0; i < 20000; i += 1) { // can change end value, however do not recommend over 80000
     count += 1;
-    if (i + 1 === 100000 && count < maxHomes) {
+    if (i + 1 === 20000 && count < maxHomes) {
       console.log('Made ', count, ' homes');
-      houseMaker(makeMoreHomes);
+      houseMaker(() => makeMoreHomes(callback));
     } else {
       houseMaker();
       if (count === maxHomes) {
         console.log('Finished Making', count, 'homes');
+        callback();
       }
     }
   }
@@ -65,11 +57,11 @@ const makeMoreHomes = () => {
 
 client.connect()
   .then(console.log('one connection'))
-  .then(() => client.execute(createKeySpace)) // making a keyspace
-  .then(console.log('keyspace has been created'))
-  .then(() => client.execute(houses))
-  .then(console.log('Table for houses has been made'))
-  .then(() => {
-    makeMoreHomes();
-  });
+  .then(() => client.execute(createKeySpace, () => console.log('keyspace has been created'))) // making a keyspace
+  .then(() => client.execute(houses, () => console.log('Table for houses has been made')))
+  .then(() => client.execute(customIndex, () => console.log('custom index made')))
+  .then(start = new Date())
+  .then(() => makeMoreHomes(() => console.log('Time used to finish making', count, 'homes', (new Date() - start) / 1000, 'seconds')));
+
 // < ----------- Do not change this part ------------>
+// for related houses SELECT * FROM housekeyspace2.houses where location like '%9407' limit 10;
