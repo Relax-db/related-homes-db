@@ -3,10 +3,11 @@
 /* eslint-disable no-console */
 const cassandra = require('cassandra-driver');
 const faker = require('faker');
+const shelljs = require('shelljs');
 const client = require('./cassandraClient.js');
 const helper = require('./schemaHelpers.js');
 
-const maxHomes = 100000;
+const maxHomes = 10000000;
 
 let start;
 
@@ -57,11 +58,15 @@ const makeMoreHomes = (callback) => {
 
 client.connect()
   .then(console.log('one connection'))
-  .then(() => client.execute(createKeySpace, () => console.log('keyspace has been created'))) // making a keyspace
-  .then(() => client.execute(houses, () => console.log('Table for houses has been made')))
-  .then(() => client.execute(customIndex, () => console.log('custom index made')))
+  .then(() => client.execute(createKeySpace)) // making a keyspace
+  .then(() => client.execute(houses))
+  .then(() => client.execute(customIndex))
   .then(start = new Date())
-  .then(() => makeMoreHomes(() => console.log('Time used to finish making', count, 'homes', (new Date() - start) / 1000, 'seconds')));
+  .then(() => console.log('Populating houses table'))
+  .then(() => makeMoreHomes(() => {
+    console.log('Time used to finish making', count, 'homes', (new Date() - start) / 1000, 'seconds')
+    shelljs.exit();
+  }));
 
 // < ----------- Do not change this part ------------>
 // for related houses SELECT * FROM housekeyspace2.houses where location like '%9407' limit 10;

@@ -8,7 +8,7 @@ const client = new cassandra.Client({
   localDataCenter: 'datacenter1',
   pooling: {
     coreConnectionsPerHost: {
-      [distance.local]: 3,
+      [distance.local]: 10,
       [distance.remote]: 1,
     },
     maxRequestsPerConnection: 32768,
