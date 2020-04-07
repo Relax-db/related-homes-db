@@ -14,22 +14,9 @@ const client = new cassandra.Client({
       [distance.local]: 5,
       [distance.remote]: 1,
     },
-    maxRequestsPerConnection: 1000,
+    maxRequestsPerConnection: 30000,
   },
   policies: { loadBalancing: lbp },
 });
 
-const client2 = new cassandra.Client({
-  contactPoints: ['localhost'],
-  localDataCenter: 'datacenter1',
-  pooling: {
-    coreConnectionsPerHost: {
-      [distance.local]: 5,
-      [distance.remote]: 1,
-    },
-    maxRequestsPerConnection: 1000,
-  },
-  policies: { loadBalancing: lbp },
-});
-
-module.exports = { client, client2 };
+module.exports = { client };
