@@ -3,7 +3,7 @@
 /* eslint-disable quotes */
 /* eslint-disable no-console */
 const cassandra = require('cassandra-driver'); // used to generate id
-const client = require('../database/cassandraClient.js');
+const { client } = require('../database/cassandraClient.js');
 
 const getRelatedHouses = (req, res) => {
   const queryRelatedHouses = 'SELECT * FROM housekeyspace2.houses where location like ? limit 13';
@@ -16,7 +16,6 @@ const getRelatedHouses = (req, res) => {
 };
 
 const createHouse = (req, res) => {
-
   const queryCreateHouse = 'INSERT INTO houseKeySpace2.houses'
     + '(id, photo, location, beds, rating, description, price)'
     + 'values (?, ?, ?, ?, ?, ?, ?)';
