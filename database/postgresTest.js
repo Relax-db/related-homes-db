@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const faker = require('faker');
+const randomZip = require('random-zipcode');
 const postgresClient = require('./postgresClient.js');
 const helper = require('./schemaHelpers.js');
 
@@ -21,7 +22,7 @@ const writeTenMillionUsers = (writer, encoding, callback) => {
     do {
       i -= 1;
       const photo = `${helper.imageLoader()}`;
-      const location = `${faker.address.zipCode()}`;
+      const location = randomZip();
       const beds = `${helper.makeBedsAndHouseString()}`;
       const rating = `${helper.getRandomArbitrary(3, 5).toFixed(2)} (${helper.getRandomInt(10, 10000)})`;
       const description = `${helper.makeDescription()}`;
@@ -48,9 +49,9 @@ const writeTenMillionUsers = (writer, encoding, callback) => {
 };
 
 const housesdb = 'CREATE UNLOGGED TABLE if not exists houses'
-  + '(id serial, photo varchar(300), location varchar(300), beds varchar(300), rating varchar(300), description varchar(1000), price varchar(300), PRIMARY KEY(id))';
+  + '(id serial, photo varchar(300), location int, beds varchar(300), rating varchar(100), description varchar(1000), price varchar(100), PRIMARY KEY(id))';
 
-const createIndex = 'CREATE INDEX if not exists location ON houses(location varchar_pattern_ops)';
+const createIndex = 'CREATE INDEX if not exists location ON houses(location)';
 
 const queryCopyTable = `COPY houses ( photo, location, beds, rating, description, price ) from '${path.join(__dirname, 'data.csv')}' DELIMITER ',' CSV HEADER`;
 

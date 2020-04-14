@@ -1,7 +1,7 @@
 const models2 = require('./models2.js');
 
-const get13RelatedHouses = (req, res) => {
-  models2.getRelatedHouses(req, res);
+const get13RelatedHouses = (req, res, callback) => {
+  models2.getRelatedHouses(req, res, callback);
 };
 
 const makeHouse = (req, res) => {

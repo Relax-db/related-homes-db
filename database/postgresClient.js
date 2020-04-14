@@ -9,4 +9,6 @@ const postgresClient = new Client({
   port: '5432',
 });
 
+postgresClient.connect();
+
 module.exports = postgresClient;

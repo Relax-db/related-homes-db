@@ -15,42 +15,42 @@ const sampleUpdateBody = {
   price: '1000',
 };
 
-let sampleId;
+// let sampleId;
 
-let start = new Date();
-const startCopy = start;
+// let start = new Date();
+// const startCopy = start;
 
-axios.post('http://localhost:3001/houses/', sampleHouseBody)
-  .then((response) => {
-    console.log('Added house in', new Date() - start, 'ms');
-    console.log('Made one house with id:', response.data);
-    sampleId = response.data;
-    return response.data;
-  })
-  .then((houseId) => {
-    start = new Date();
-    return axios.get(`http://localhost:3001/houses/${houseId}/relatedHomes`);
-  })
-  .then((response) => {
-    console.log('GET Related Homes in', new Date() - start, 'ms');
-    console.log('Related homes', response.data);
-  })
-  .then(() => {
-    start = new Date();
-    return axios.put(`http://localhost:3001/houses/${sampleId}/`, sampleUpdateBody);
-  })
-  .then((response) => {
-    console.log(response.data, 'in', new Date() - start, 'ms');
-  })
-  .then(() => {
-    start = new Date();
-    return axios.delete(`http://localhost:3001/houses/${sampleId}/`);
-  })
-  .then((response) => {
-    console.log(response.data, 'in', new Date() - start, 'ms');
-    console.log('go check for house at id:', sampleId);
-    console.log('Total elapsed time for 4 chained CRUD operations', new Date() - startCopy, 'ms');
-  });
+// axios.post('http://localhost:3001/houses/', sampleHouseBody)
+//   .then((response) => {
+//     console.log('Added house in', new Date() - start, 'ms');
+//     console.log('Made one house with id:', response.data);
+//     sampleId = response.data;
+//     return response.data;
+//   })
+//   .then((houseId) => {
+//     start = new Date();
+//     return axios.get(`http://localhost:3001/houses/${houseId}/relatedHomes`);
+//   })
+//   .then((response) => {
+//     console.log('GET Related Homes in', new Date() - start, 'ms');
+//     console.log('Related homes', response.data);
+//   })
+//   .then(() => {
+//     start = new Date();
+//     return axios.put(`http://localhost:3001/houses/${sampleId}/`, sampleUpdateBody);
+//   })
+//   .then((response) => {
+//     console.log(response.data, 'in', new Date() - start, 'ms');
+//   })
+//   .then(() => {
+//     start = new Date();
+//     return axios.delete(`http://localhost:3001/houses/${sampleId}/`);
+//   })
+//   .then((response) => {
+//     console.log(response.data, 'in', new Date() - start, 'ms');
+//     console.log('go check for house at id:', sampleId);
+//     console.log('Total elapsed time for 4 chained CRUD operations', new Date() - startCopy, 'ms');
+//   });
 // const start1 = new Date();
 // let count = 0;
 
@@ -65,3 +65,7 @@ axios.post('http://localhost:3001/houses/', sampleHouseBody)
 // };
 
 // getHouse();
+
+for (let i = 0; i < 1000000; i += 1) {
+  axios.get(`http://localhost:3001/houses/${i}/relatedHomes`);
+};
