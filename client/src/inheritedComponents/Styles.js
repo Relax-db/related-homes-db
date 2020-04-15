@@ -40,4 +40,12 @@ const Description = styled.div`
 
 const PricePerNight = styled.div``;
 
-export default { AllHouses, AllHousesWrapper, SingleHome, BedsAndHouse, Rating, Description, PricePerNight }
+module.exports = { 
+  AllHouses, 
+  AllHousesWrapper, 
+  SingleHome, 
+  BedsAndHouse, 
+  Rating, 
+  Description, 
+  PricePerNight 
+};
